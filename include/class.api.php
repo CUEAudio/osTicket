@@ -102,8 +102,6 @@ class API {
     function getIdByKey($key, $ip='') {
 
         $sql='SELECT id FROM '.API_KEY_TABLE.' WHERE apikey='.db_input($key);
-        if($ip)
-            $sql.=' AND ipaddr='.db_input($ip);
 
         if(($res=db_query($sql)) && db_num_rows($res))
             list($id) = db_fetch_row($res);
@@ -175,8 +173,8 @@ class ApiController {
 
         if(!($key=$this->getApiKey()))
             return $this->exerr(401, __('Valid API key required'));
-        elseif (!$key->isActive() || $key->getIPAddr()!=$_SERVER['REMOTE_ADDR'])
-            return $this->exerr(401, __('API key not found/active or source IP not authorized'));
+        elseif (!$key->isActive())
+            return $this->exerr(401, __('API key not found/active'));
 
         return $key;
     }
